@@ -8,11 +8,11 @@ output = "pen " + time.strftime("%Y-%m-%d %H.%M.%S") + ".png"
 surf = C.ImageSurface(C.FORMAT_RGB24, WIDTH, HEIGHT)
 ctx = C.Context(surf)
 
-# fill everything with white
+# make background parchment coloured
 ctx.new_path()
-ctx.set_source_rgb(0.9, 0.9, 0.9)
+ctx.set_source_rgb(235.0/255.0, 213.0/255.0, 161.0/255.0)
 ctx.rectangle(0, 0, WIDTH, HEIGHT)
-ctx.fill()  # fill current path
+ctx.fill()
 
 class Pen():
 	def __init__(self):
