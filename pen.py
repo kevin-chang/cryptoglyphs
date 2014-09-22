@@ -34,8 +34,12 @@ class Pen():
 		self.cursorX = self.margin
 		self.cursorY = self.margin + self.lineHeight * self.scale
 		
+		self.charCount = 0
+		self.wordLength = 5
+		self.generateWordLength()
+		
 		self.done = 0
-		self.strokeCount = 0
+		# self.strokeCount = 0
 		
 		self.resetPoint()
 		
@@ -56,8 +60,8 @@ class Pen():
 		
 		# print "posX = %d, posY = %d" % (self.posX, self.posY)
 		
-		self.strokeCount += 1
-		print "strokeCount = %d" % self.strokeCount
+		# self.strokeCount += 1
+		# print "strokeCount = %d" % self.strokeCount
 		
 	def newLineIfNeeded(self):
 		# x-coord of cursor
@@ -69,6 +73,48 @@ class Pen():
 		# if end of page reached, done = true
 		if self.cursorY > HEIGHT - self.margin:
 			self.done = 1
+			
+	def generateWordLength(self):
+		# Word length distribution from:
+		# http://norvig.com/mayzner.html
+	
+		rand100 = uniform(0, 100)
+		if rand100 < 2.998:
+			self.wordLength = 1
+		elif 2.998 <= rand100 < 20.649:
+			self.wordLength = 2
+		elif 20.649 <= rand100 < 41.16:
+			self.wordLength = 3
+		elif 41.16 <= rand100 < 55.947:
+			self.wordLength = 4
+		elif 55.947 <= rand100 < 66.647:
+			self.wordLength = 5
+		elif 66.647 <= rand100 < 75.035:
+			self.wordLength = 6
+		elif 75.035 <= rand100 < 82.974:
+			self.wordLength = 7
+		elif 82.974 <= rand100 < 88.917:
+			self.wordLength = 8
+		elif 88.917 <= rand100 < 93.354:
+			self.wordLength = 9
+		elif 93.354 <= rand100 < 96.43:
+			self.wordLength = 10
+		elif 96.43 <= rand100 < 98.191:
+			self.wordLength = 11
+		elif 98.191 <= rand100 < 99.149:
+			self.wordLength = 12
+		elif 99.149 <= rand100 < 99.667:
+			self.wordLength = 13
+		elif 99.667 <= rand100 < 99.889:
+			self.wordLength = 14
+		elif 99.889 <= rand100 < 99.965:
+			self.wordLength = 15
+		elif 99.965 <= rand100:
+			self.wordLength = 16
+		else:
+			# Revert to the average word length of 5
+			# if some form of error occurs
+			self.wordLength = 5
 
 	def changeDirection(self):
 		self.angle = self.randAngle()
@@ -85,10 +131,21 @@ class Pen():
 		# Reset point if max iteration limit reached
 		if self.age > self.maxLength:
 			self.resetPoint()
+			# Increment character count
+			self.charCount += 1
 			
 		# Reset point if the position of the 'paintbrush' is outside the canvas limits
 		if (self.posX < 0 or self.posY < 0 or self.posX > WIDTH or self.posY > HEIGHT):
 			self.resetPoint()
+			self.charCount += 1
+			
+		# If current character count exceeds the current word length,
+		# insert two spaces, reset character count and generate the next word length
+		if self.charCount >= self.wordLength:
+			self.resetPoint()
+			self.resetPoint()
+			self.charCount = 0
+			self.generateWordLength()
 			
 		# Increment count
 		self.age += 1
@@ -164,7 +221,7 @@ class Commarabic(Pen):
 	def changeDirection(self):
 		Pen.changeDirection(self)
 		
-		dAngle = uniform(-0.01, 0.01)
+		dAngle = uniform(-0.001, 0.001)
 		ddAngle = uniform(-0.005, 0.005)
 		changeDirectionChance = 0.5
 		dampDAngle = 0.1
