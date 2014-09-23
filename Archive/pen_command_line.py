@@ -1,12 +1,17 @@
 import cairocffi as C
 import math, time
 from random import uniform
-from Tkinter import *
 
 WIDTH, HEIGHT = 960, 540
 
 surf = C.ImageSurface(C.FORMAT_RGB24, WIDTH, HEIGHT)
 ctx = C.Context(surf)
+
+# make background parchment coloured
+ctx.new_path()
+ctx.set_source_rgb(235.0/255.0, 213.0/255.0, 161.0/255.0)
+ctx.rectangle(0, 0, WIDTH, HEIGHT)
+ctx.fill()
 
 class Pen():
 	def __init__(self):
@@ -287,39 +292,49 @@ class Madman(Pen):
 		self.dampDDAngle = 0.9
 		self.maxLength = uniform(500, 1100)
 
+print ("""
+	[1] Clef
+	[2] Roboglyph
+	[3] Loopy
+	[4] Giraffes
+	[5] Commarabic
+	[6] Bass Clef
+	[7] Staccato
+	[8] Madman
+	""")
 
-def create():
-	if var.get() == 1:
-		penStyle = Clef()
-		styleName = "Clef "
-	elif var.get() == 2:
-		penStyle = Roboglyph()
-		styleName = "Roboglyph "
-	elif var.get() == 3:
-		penStyle = Pen()
-		styleName = "Loopy "
-	elif var.get() == 4:
-		penStyle = Giraffes()
-		styleName = "Giraffes "
-	elif var.get() == 5:
-		penStyle = Commarabic()
-		styleName = "Commarabic "
-	elif var.get() == 6:
-		penStyle = BassClef()
-		styleName = "Bass Clef "
-	elif var.get() == 7:
-		penStyle = Staccato()
-		styleName = "Staccato "
-	elif var.get() == 8:
-		penStyle = Madman()
-		styleName = "Madman "
-	
-	# make background parchment coloured
-	ctx.new_path()
-	ctx.set_source_rgb(235.0/255.0, 213.0/255.0, 161.0/255.0)
-	ctx.rectangle(0, 0, WIDTH, HEIGHT)
-	ctx.fill()
-	
+styleNum = input("Type the number of the style you want to use: ")
+validChoice = 1
+
+if styleNum == 1:
+	penStyle = Clef()
+	styleName = "Clef "
+elif styleNum == 2:
+	penStyle = Roboglyph()
+	styleName = "Roboglyph "
+elif styleNum == 3:
+	penStyle = Pen()
+	styleName = "Loopy "
+elif styleNum == 4:
+	penStyle = Giraffes()
+	styleName = "Giraffes "
+elif styleNum == 5:
+	penStyle = Commarabic()
+	styleName = "Commarabic "
+elif styleNum == 6:
+	penStyle = BassClef()
+	styleName = "Bass Clef "
+elif styleNum == 7:
+	penStyle = Staccato()
+	styleName = "Staccato "
+elif styleNum == 8:
+	penStyle = Madman()
+	styleName = "Madman "
+else:
+	print ("Only the listed numbers are valid, try again!")
+	validChoice = 0
+
+if validChoice == 1:
 	while (penStyle.done == 0):
 		penStyle.step()
 		penStyle.draw()
@@ -327,32 +342,3 @@ def create():
 	# save to PNG
 	output = styleName + time.strftime("%Y-%m-%d %H.%M.%S") + ".png"
 	surf.write_to_png(output)
-
-# Tkinter GUI
-root = Tk()
-root.wm_title("Cryptoglyphs")
-var = IntVar()
-
-msg = StringVar()
-instruction = Label( root, textvariable=msg, relief=RAISED )
-msg.set(" Select the writing style you'd like to use, \nthen wait for a few seconds!")
-instruction.pack()
-
-R1 = Radiobutton(root, text="Clef", variable=var, value=1, command=create)
-R1.pack( anchor = W )
-R2 = Radiobutton(root, text="Roboglyph", variable=var, value=2, command=create)
-R2.pack( anchor = W )
-R3 = Radiobutton(root, text="Loopy", variable=var, value=3, command=create)
-R3.pack( anchor = W)
-R4 = Radiobutton(root, text="Giraffes", variable=var, value=4, command=create)
-R4.pack( anchor = W)
-R5 = Radiobutton(root, text="Commarabic", variable=var, value=5, command=create)
-R5.pack( anchor = W)
-R6 = Radiobutton(root, text="Bass Clef", variable=var, value=6, command=create)
-R6.pack( anchor = W)
-R7 = Radiobutton(root, text="Staccato", variable=var, value=7, command=create)
-R7.pack( anchor = W)
-R8 = Radiobutton(root, text="Madman", variable=var, value=8, command=create)
-R8.pack( anchor = W)
-
-root.mainloop()
