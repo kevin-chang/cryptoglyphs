@@ -3,13 +3,15 @@ Cryptoglyphs
 
 Procedurally generated fantasy writing with Python.
 
+![alt tag](http://i.imgur.com/Xzc7TIB.png)
+
 Ported from: https://github.com/bwiklund/roboglyphics
 
-Current Features:
+**Current Features:**
 * Eight different writing styles
 * Realistic word spacing
 
-Planned Features:
+**Planned Features:**
 * GUI
 * Random parchment texture generation
 * User adjustable parameters - create and save your own writing styles
